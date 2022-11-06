@@ -1,5 +1,5 @@
 # Nordic Screener
-![this is an image](images/nordic_screener.svg)
+![this is an image](images/nordic_screener.png)
 
 ## Description
 This repo is a scaled down version of [stock crawler](https://github.com/torjusn/stock_crawler_and_screener) that collects stock metrics through the [`Yahoo Finance API`](https://pypi.org/project/yfinance/) for the nordic markets and ranks them based on a set of composite metrics from ["The little book that beats the market"](https://www.amazon.com/Little-Book-Still-Beats-Market/dp/0470624159) by J. Greenblatt. Stock metrics are obtained by referencing ticker codes in yf, e.g. `CRAYN.OL` for `Crayon Group Holding ASA`, and responds with financial- and general info for that stock. Final scores for each stock are saved to excel as `.xlsx`.
