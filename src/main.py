@@ -6,24 +6,24 @@
 # -----------------------------------------------------------------------------
 
 # standard lib
-import csv
+import time
+import logging
 from pathlib import Path
 
 # data
 import numpy as np
 import pandas as pd
 
-# finance api
-import yfinance as yf
+# local
+import functions as fn
 
 """
 TODO
 [x] avoid looping through tickers already in screened_stocks.csv OR empty_tickers.csv
-[ ] logging
+[x] logging
 [ ] rank descending based on metrics
 [ ] combine ranks/score
-[ ] write each missing ticker as row to csv
-[ ] exclude sector/industry
+[ ] write README
 """
 
 
@@ -45,90 +45,57 @@ The goal of this script is to:
     - final stock score is the sum of its points, the lower the better
 """
 
+# free version of yahoo api has a max request per hour per ip
+MAX_TICKERS_PER_HOUR = 25
+
 # pathing
 FILE_DIR = Path(__file__).parent
+
 DATA_DIR = FILE_DIR / "data"
-
-NORWEGIAN_TICKERS_PATH = DATA_DIR / "norwegian_tickers.csv"
-DANISH_TICKERS_PATH = DATA_DIR / "danish_tickers.csv"
-FINNISH_TICKERS_PATH = DATA_DIR / "finnish_tickers.csv"
-SWEDISH_TICKERS_PATH = DATA_DIR / "swedish_tickers.csv"
-
+ticker_paths = [
+    DATA_DIR / filename
+    for filename in [
+        "norwegian_tickers.csv",
+        "danish_tickers.csv",
+        "finnish_tickers.csv",
+        "swedish_tickers.csv",
+    ]
+]
 EMPTY_TICKERS_PATH = DATA_DIR / "empty_tickers.csv"
 
 RESULT_DIR = FILE_DIR.parent / "results"
 RESULT_DIR.mkdir(exist_ok=True)
-RESULT_NORWAY_PATH = RESULT_DIR / "metrics_norway.csv"
+metric_paths = [RESULT_DIR / ("metrics_" + path.name) for path in ticker_paths]
+result_paths = [RESULT_DIR / ("rank_" + path.stem + ".xlsx") for path in ticker_paths]
 
+# logging
+logger = logging.getLogger(__name__)
 
-def list_to_csv(mylist: list[str], path: str):
-    """
-    Helper function to save list to csv
-    """
-    with open(path, "w", newline="") as myfile:
-        wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
-        wr.writerow(mylist)
+# streamhandler displays to console, filehandler writes to logfile
+console_handler = logging.StreamHandler()
+log_path = Path(__file__).stem + ".log"
+file_handler = logging.FileHandler(log_path)
 
+# format log
+formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+file_handler.setFormatter(formatter)
 
-def add_suffix(df: pd.DataFrame, suffix: str) -> pd.DataFrame:
-    """""
-    Helper function for adding country suffix to stock tickers
+# add handlers
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
 
-    ARGS:
-        df: dataframe containing non-suffixed stock ticker codes, e.g. "EQNR"
-        suffix: ".OL" country suffix stock codes
-    OUT: 
-        df: dataframe with suffixed stock tickers, e.g. "EQNR.OL"
-    """
-    df.iloc[:, 0] = df.iloc[:, 0].astype(str) + f"{suffix}"
-    return df
-
-
-def load_one_stock_data(ticker_code: str) -> tuple[dict, pd.DataFrame]:
-    """
-    Get info and finance metrics of only one (1) stock/ticker from ticker code
-    
-    ARGS:
-        ticker_code: example "EQNR.OL" = code of equinor listed in oslo stock exchange
-    """
-
-    # ticker_code = "AAPL" # apple inc
-    stock_ticker = yf.Ticker(ticker_code)
-
-    # info includes return on assets, trailingEps (Price to earnings)
-    info = stock_ticker.info
-
-    # financials includes net income
-    financials = stock_ticker.get_financials()
-
-    return info, financials
-
-
-def write_headers_csv(file_path, headers: list[str]):
-    """
-    Helper function open csv and assign header
-    """
-    with open(file_path, "w") as csv_file:
-        dw = csv.DictWriter(csv_file, delimiter=",", fieldnames=headers)
-        dw.writeheader()
-
-
-def append_row_csv(file_path: str, dict_row: dict, headers: list[str]):
-    """
-    Append one dict row to csv corresponding to headers
-    """
-    with open(file_path, "a") as csv_file:
-        dw = csv.DictWriter(csv_file, delimiter=",", fieldnames=headers)
-        dw.writerow(dict_row)
-
-
-def rank_stocks():
-    return
+logger.setLevel(logging.INFO)
 
 
 def main():
 
-    headers = [
+    logger.info("==> Started Main Script")
+
+    empty_headers = ["ticker_name"]
+    if not EMPTY_TICKERS_PATH.is_file():
+        fn.write_headers_csv(EMPTY_TICKERS_PATH, empty_headers)
+
+    metric_headers = [
         "long_name",
         "ticker_name",
         "EBIT_2021",
@@ -141,84 +108,101 @@ def main():
         # "final_score",
     ]
 
-    # create csv with headers first time
-    if not RESULT_NORWAY_PATH.is_file():
-        write_headers_csv(RESULT_NORWAY_PATH, headers)
+    ticker_count = 0
 
-    # tickers
-    norwegian_tickers = pd.read_csv(NORWEGIAN_TICKERS_PATH, header=None)[0]
-    danish_tickers = pd.read_csv(DANISH_TICKERS_PATH, header=None)[0]
-    finnish_tickers = pd.read_csv(FINNISH_TICKERS_PATH, header=None)[0]
-    swedish_tickers = pd.read_csv(SWEDISH_TICKERS_PATH, header=None)[0]
+    # loop each country
+    for ticker_path, metric_path, result_path in zip(
+        ticker_paths, metric_paths, result_paths
+    ):
+        tickers = pd.read_csv(ticker_path, header=None)[0]
+        # create result csv with headers first time
+        if not metric_path.is_file():
+            fn.write_headers_csv(metric_path, metric_headers)
 
-    # broken tickers
-    empty_tickers = []
+        # exclude previously calculated tickers and empty ones
+        previously_calculated_tickers = pd.read_csv(metric_path)
+        previously_calculated_tickers = pd.Series(
+            previously_calculated_tickers["ticker_name"]
+        )
+        tickers = tickers[~tickers.isin(previously_calculated_tickers)]
 
-    # add suffixes
-    # norwegian_tickers = add_suffix(norwegian_tickers, ".OL")
-    # danish_tickers = add_suffix(danish_tickers, ".CO")
-    # finnish_tickers = add_suffix(finnish_tickers, ".HE")
-    # swedish_tickers = add_suffix(swedish_tickers, ".ST")
+        empty_tickers = pd.read_csv(EMPTY_TICKERS_PATH)
+        empty_tickers = pd.Series(empty_tickers["ticker_name"])
+        tickers = tickers[~tickers.isin(empty_tickers)]
 
-    # save back to csv
-    # norwegian_tickers.to_csv(NORWEGIAN_TICKERS_PATH, header=None, index=None)
-    # danish_tickers.to_csv(DANISH_TICKERS_PATH, header=None, index=None)
-    # finnish_tickers.to_csv(FINNISH_TICKERS_PATH, header=None, index=None)
-    # swedish_tickers.to_csv(SWEDISH_TICKERS_PATH, header=None, index=None)
+        if len(tickers) > 0:
 
-    # previously calculated tickers
-    previously_calculated = pd.read_csv(RESULT_NORWAY_PATH)  # , header=headers)
-    previously_calculated = pd.Series(previously_calculated["ticker_name"])
+            logger.info(
+                f"Extracting metrics of [{len(tickers)}] tickers from [{ticker_path.name}]..."
+            )
 
-    # get set of non-calculated tickers
-    norwegian_tickers = norwegian_tickers[
-        ~norwegian_tickers.isin(previously_calculated)
-    ]
+            # loop each ticker of that country, extract metrics, save to csv
+            for idx, (original_idx, ticker) in enumerate(tickers.items()):
 
-    # TODO print log.info(f"==> Extracting metrics of [{len(norwegian_tickers)] {norwegian} tickers}")
+                # display progress
+                if idx % 10 == 0:
+                    logger.info(f"extracting ticker no. [{idx}/{len(tickers)}]")
 
-    for index, ticker in norwegian_tickers.items():
+                try:
+                    current_info, current_financials = fn.load_one_stock_data(ticker)
 
-        # TODO if index % 10 == 0 print(f""[{index}/{len(norwegian_tickers)}]")
+                    # write broken tickers to separate file
+                    if current_financials.empty:
+                        empty_row = {empty_headers[0]: ticker}
+                        fn.append_row_csv(EMPTY_TICKERS_PATH, empty_row, empty_headers)
+                    # write functioning ticker metrics to output
+                    else:
+                        metrics = fn.get_metrics(
+                            ticker, current_info, current_financials
+                        )
 
-        try:
-            current_info, current_financials = load_one_stock_data(ticker)
+                        # create dictrow and write to csv
+                        dict_row = dict(zip(metric_headers, metrics))
+                        fn.append_row_csv(metric_path, dict_row, metric_headers)
 
-            if current_financials.empty:
-                # TODO append row to csv
-                empty_tickers.append(ticker)
-                list_to_csv(empty_tickers, EMPTY_TICKERS_PATH)
-            else:
+                except Exception as e:
+                    logging.error(e)
+                    logging.error(f"{ticker}")
+                    continue
 
-                # TODO encapsulate current_data inside function
+                # wait an hour after using max requests per hour for yfinance api
+                ticker_count += 1
+                if ticker_count >= MAX_TICKERS_PER_HOUR:
+                    sleep_time = 3600
+                    logging.info(
+                        f"Sleep for {sleep_time}sec to avoid yfi max request cap"
+                    )
+                    time.sleep(sleep_time)
+                ticker_count = 0
 
-                # get metrics
-                long_name = current_info["longname"]
-                ebits = current_financials.loc["Ebit"].values
-                ebits_mean = np.mean(ebits)
-                enterprise_value = current_info["enterpriseValue"]
-                return_on_equity = current_info["returnOnEquity"]
+        # rank stocks of country by extracted data
+        completed_metrics = pd.read_csv(metric_path)
+        original_idx_col = completed_metrics.index
 
-                # combine metrics
-                current_data = [
-                    long_name,
-                    ticker,
-                    *ebits,
-                    ebits_mean,
-                    enterprise_value,
-                    return_on_equity,
-                ]
+        # EBIT/EV
+        completed_metrics["EBIT/EV"] = (
+            completed_metrics["EBIT_average"] / completed_metrics["enterprise_value"]
+        )
+        completed_metrics = completed_metrics.sort_values(
+            by=["EBIT/EV"], ascending=False
+        )
+        completed_metrics["EBIT/EV_rank"] = original_idx_col
 
-                # create dict from (headers, current datapoint) and write to csv
-                dict_row = dict(zip(headers, current_data))
-                append_row_csv(RESULT_NORWAY_PATH, dict_row, headers)
+        # ROE
+        completed_metrics = completed_metrics.sort_values(
+            by=["return_on_equity"], ascending=False
+        )
+        completed_metrics["ROE_rank"] = original_idx_col
 
-        except Exception as e:
-            # TODO logging and save ticker to logfile
-            print(ticker)
-            print(e)
-            continue
-    return
+        # Total rank = EBIT/EV + ROE, low total = good stock
+        completed_metrics["total_rank"] = (
+            completed_metrics["EBIT/EV_rank"] + completed_metrics["ROE_rank"]
+        )
+        completed_metrics = completed_metrics.sort_values(
+            by=["total_rank"], ascending=True
+        )
+        # completed_metrics.to_csv(result_path, na_rep="Nan", index=False)
+        completed_metrics.to_excel(result_path, na_rep="Nan", index=False)
 
 
 if __name__ == "__main__":

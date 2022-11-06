@@ -1,0 +1,92 @@
+2022-11-06 12:01:30,573 - INFO - ==> Started Main Script
+2022-11-06 12:01:30,582 - INFO - Extracting metrics of [209] tickers from [norwegian_tickers.csv]...
+2022-11-06 12:01:30,582 - INFO - extracting ticker no. [0/209]
+2022-11-06 12:07:22,422 - INFO - ==> Started Main Script
+2022-11-06 12:07:22,426 - INFO - Extracting metrics of [206] tickers from [norwegian_tickers.csv]...
+2022-11-06 12:14:22,339 - INFO - ==> Started Main Script
+2022-11-06 12:14:22,342 - INFO - Extracting metrics of [203] tickers from [norwegian_tickers.csv]...
+2022-11-06 12:14:37,137 - INFO - extracting ticker no. [10/203]
+2022-11-06 12:15:20,726 - INFO - extracting ticker no. [20/203]
+2022-11-06 12:22:29,477 - INFO - ==> Started Main Script
+2022-11-06 12:22:29,482 - INFO - Extracting metrics of [183] tickers from [norwegian_tickers.csv]...
+2022-11-06 12:23:41,049 - INFO - ==> Started Main Script
+2022-11-06 12:23:41,054 - INFO - Extracting metrics of [183] tickers from [norwegian_tickers.csv]...
+2022-11-06 12:25:28,126 - INFO - ==> Started Main Script
+2022-11-06 12:25:28,130 - INFO - Extracting metrics of [183] tickers from [norwegian_tickers.csv]...
+2022-11-06 12:29:58,560 - INFO - ==> Started Main Script
+2022-11-06 12:29:58,567 - INFO - Extracting metrics of [183] tickers from [norwegian_tickers.csv]...
+2022-11-06 12:30:17,143 - INFO - extracting ticker no. [30/183]
+2022-11-06 12:30:59,160 - INFO - extracting ticker no. [40/183]
+2022-11-06 12:32:52,784 - INFO - extracting ticker no. [50/183]
+2022-11-06 12:44:19,161 - INFO - ==> Started Main Script
+2022-11-06 12:44:19,165 - INFO - Extracting metrics of [154] tickers from [norwegian_tickers.csv]...
+2022-11-06 12:44:41,376 - INFO - extracting ticker no. [60/154]
+2022-11-06 12:45:27,431 - INFO - extracting ticker no. [70/154]
+2022-11-06 12:47:34,052 - INFO - extracting ticker no. [80/154]
+2022-11-06 13:15:27,780 - INFO - ==> Started Main Script
+2022-11-06 13:29:25,312 - INFO - ==> Started Main Script
+2022-11-06 13:29:25,316 - INFO - Extracting metrics of [131] tickers from [norwegian_tickers.csv]...
+2022-11-06 13:31:26,636 - INFO - ==> Started Main Script
+2022-11-06 13:31:26,642 - INFO - Extracting metrics of [131] tickers from [norwegian_tickers.csv]...
+2022-11-06 13:32:29,076 - INFO - ==> Started Main Script
+2022-11-06 13:32:29,081 - INFO - Extracting metrics of [131] tickers from [norwegian_tickers.csv]...
+2022-11-06 13:33:43,081 - INFO - ==> Started Main Script
+2022-11-06 13:33:43,086 - INFO - Extracting metrics of [131] tickers from [norwegian_tickers.csv]...
+2022-11-06 13:35:30,586 - INFO - ==> Started Main Script
+2022-11-06 13:35:30,591 - INFO - Extracting metrics of [131] tickers from [norwegian_tickers.csv]...
+2022-11-06 13:40:26,541 - INFO - ==> Started Main Script
+2022-11-06 13:40:26,546 - INFO - Extracting metrics of [131] tickers from [norwegian_tickers.csv]...
+2022-11-06 13:43:10,411 - INFO - ==> Started Main Script
+2022-11-06 13:46:48,430 - INFO - ==> Started Main Script
+2022-11-06 13:46:48,434 - INFO - Extracting metrics of [131] tickers from [norwegian_tickers.csv]...
+2022-11-06 13:47:45,664 - INFO - ==> Started Main Script
+2022-11-06 13:47:45,669 - INFO - Extracting metrics of [131] tickers from [norwegian_tickers.csv]...
+2022-11-06 13:48:37,448 - INFO - extracting ticker no. [90/131]
+2022-11-06 13:50:13,749 - INFO - extracting ticker no. [100/131]
+2022-11-06 13:52:21,113 - INFO - extracting ticker no. [110/131]
+2022-11-06 13:54:38,298 - INFO - extracting ticker no. [120/131]
+2022-11-06 14:01:11,691 - INFO - ==> Started Main Script
+2022-11-06 14:01:11,696 - INFO - Extracting metrics of [89] tickers from [norwegian_tickers.csv]...
+2022-11-06 14:01:11,696 - INFO - extracting ticker no. [120/89]
+2022-11-06 14:02:02,597 - INFO - extracting ticker no. [130/89]
+2022-11-06 14:04:22,799 - INFO - extracting ticker no. [140/89]
+2022-11-06 14:08:49,235 - INFO - ==> Started Main Script
+2022-11-06 14:08:49,240 - INFO - Extracting metrics of [64] tickers from [norwegian_tickers.csv]...
+2022-11-06 14:08:49,240 - INFO - extracting ticker no. [0/64]
+2022-11-06 14:10:59,962 - INFO - extracting ticker no. [10/64]
+2022-11-06 14:13:13,807 - INFO - extracting ticker no. [20/64]
+2022-11-06 14:14:44,327 - INFO - ==> Started Main Script
+2022-11-06 14:14:44,333 - INFO - Extracting metrics of [42] tickers from [norwegian_tickers.csv]...
+2022-11-06 14:14:44,333 - INFO - extracting ticker no. [0/42]
+2022-11-06 14:16:56,025 - INFO - extracting ticker no. [10/42]
+2022-11-06 14:19:10,776 - INFO - extracting ticker no. [20/42]
+2022-11-06 14:22:55,529 - INFO - ==> Started Main Script
+2022-11-06 14:22:55,533 - INFO - Extracting metrics of [17] tickers from [norwegian_tickers.csv]...
+2022-11-06 14:22:55,534 - INFO - extracting ticker no. [0/17]
+2022-11-06 14:25:10,362 - INFO - extracting ticker no. [10/17]
+2022-11-06 14:26:42,111 - INFO - Extracting metrics of [128] tickers from [danish_tickers.csv]...
+2022-11-06 14:26:42,111 - INFO - extracting ticker no. [0/128]
+2022-11-06 14:30:12,199 - INFO - ==> Started Main Script
+2022-11-06 14:30:40,763 - INFO - ==> Started Main Script
+2022-11-06 14:32:18,512 - INFO - ==> Started Main Script
+2022-11-06 14:49:48,510 - INFO - ==> Started Main Script
+2022-11-06 14:59:03,579 - INFO - ==> Started Main Script
+2022-11-06 15:09:06,940 - INFO - ==> Started Main Script
+2022-11-06 15:09:09,563 - INFO - ==> Started Main Script
+2022-11-06 15:09:22,248 - INFO - ==> Started Main Script
+2022-11-06 15:13:01,747 - INFO - ==> Started Main Script
+2022-11-06 15:16:17,210 - INFO - ==> Started Main Script
+2022-11-06 15:20:56,561 - INFO - ==> Started Main Script
+2022-11-06 15:27:21,009 - INFO - ==> Started Main Script
+2022-11-06 15:28:10,178 - INFO - ==> Started Main Script
+2022-11-06 15:28:10,182 - INFO - Extracting metrics of [7] tickers from [norwegian_tickers.csv]...
+2022-11-06 15:28:10,182 - INFO - extracting ticker no. [0/7]
+2022-11-06 15:28:48,914 - INFO - Extracting metrics of [128] tickers from [danish_tickers.csv]...
+2022-11-06 15:28:48,914 - INFO - extracting ticker no. [0/128]
+2022-11-06 15:32:31,025 - INFO - ==> Started Main Script
+2022-11-06 15:32:31,038 - INFO - Extracting metrics of [128] tickers from [danish_tickers.csv]...
+2022-11-06 15:32:31,038 - INFO - extracting ticker no. [0/128]
+2022-11-06 15:53:49,838 - INFO - ==> Started Main Script
+2022-11-06 15:54:24,901 - INFO - ==> Started Main Script
+2022-11-06 15:54:25,105 - INFO - Extracting metrics of [128] tickers from [danish_tickers.csv]...
+2022-11-06 15:54:25,106 - INFO - extracting ticker no. [0/128]

@@ -1,0 +1,12 @@
+# ignore specific files
+# test.py
+__pycache__
+
+
+# ignore endings
+*.xlsx
+*.env 
+*.pyc
+
+# ignore directories
+__pycache__/
