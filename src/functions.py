@@ -119,7 +119,3 @@ def get_ranked_stocks(metrics):
     metrics = metrics.sort_values(by=["total_rank"], ascending=True)
 
     return metrics
-
-
-def rank_stocks():
-    return
