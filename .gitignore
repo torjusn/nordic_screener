@@ -7,6 +7,7 @@ __pycache__
 *.xlsx
 *.env 
 *.pyc
+*.log
 
 # ignore directories
 __pycache__/
