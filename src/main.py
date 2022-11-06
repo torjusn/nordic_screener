@@ -17,15 +17,6 @@ import pandas as pd
 # local
 import functions as fn
 
-"""
-TODO
-[x] avoid looping through tickers already in screened_stocks.csv OR empty_tickers.csv
-[x] logging
-[ ] rank descending based on metrics
-[ ] combine ranks/score
-[ ] write README
-"""
-
 
 """
 The goal of this script is to:
@@ -39,10 +30,10 @@ The goal of this script is to:
 
 2.
 - use said metrics to give each stock a composite score where the lowest is best
-- example:
-    - rank all stocks by (EBIT 3y average) / Enterprise Value from high to low, e.g. highest score gives 1 point
-    - rank all stocks by ROC or ROE from high to low, e.g. highest score gives 1 point
-    - final stock score is the sum of its points, the lower the better
+    - example:
+        - rank all stocks by (EBIT 3y average) / Enterprise Value from high to low, e.g. highest score gives 1 point
+        - rank all stocks by ROC or ROE from high to low, e.g. highest score gives 1 point
+        - final stock score is the sum of its points, the lower the better
 """
 
 # free version of yahoo api has a max request per hour per ip
@@ -177,32 +168,10 @@ def main():
 
         # rank stocks of country by extracted data
         completed_metrics = pd.read_csv(metric_path)
-        original_idx_col = completed_metrics.index
+        ranked_stocks = fn.get_ranked_stocks(completed_metrics)
 
-        # EBIT/EV
-        completed_metrics["EBIT/EV"] = (
-            completed_metrics["EBIT_average"] / completed_metrics["enterprise_value"]
-        )
-        completed_metrics = completed_metrics.sort_values(
-            by=["EBIT/EV"], ascending=False
-        )
-        completed_metrics["EBIT/EV_rank"] = original_idx_col
-
-        # ROE
-        completed_metrics = completed_metrics.sort_values(
-            by=["return_on_equity"], ascending=False
-        )
-        completed_metrics["ROE_rank"] = original_idx_col
-
-        # Total rank = EBIT/EV + ROE, low total = good stock
-        completed_metrics["total_rank"] = (
-            completed_metrics["EBIT/EV_rank"] + completed_metrics["ROE_rank"]
-        )
-        completed_metrics = completed_metrics.sort_values(
-            by=["total_rank"], ascending=True
-        )
-        # completed_metrics.to_csv(result_path, na_rep="Nan", index=False)
-        completed_metrics.to_excel(result_path, na_rep="Nan", index=False)
+        # ranked_stocks.to_csv(result_path, na_rep="Nan", index=False)
+        ranked_stocks.to_excel(result_path, na_rep="Nan", index=False)
 
 
 if __name__ == "__main__":

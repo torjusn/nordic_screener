@@ -95,5 +95,31 @@ def get_metrics(ticker: str, info: dict, financials: pd.DataFrame):
     return metrics
 
 
+def get_ranked_stocks(metrics):
+
+    original_idx_col = metrics.index
+
+    # EBIT/EV
+    metrics["EBIT/EV"] = (
+        metrics["EBIT_average"] / metrics["enterprise_value"]
+    )
+    metrics = metrics.sort_values(by=["EBIT/EV"], ascending=False)
+    metrics["EBIT/EV_rank"] = original_idx_col
+
+    # ROE
+    metrics = metrics.sort_values(
+        by=["return_on_equity"], ascending=False
+    )
+    metrics["ROE_rank"] = original_idx_col
+
+    # Total rank = EBIT/EV + ROE, low total = good stock
+    metrics["total_rank"] = (
+        metrics["EBIT/EV_rank"] + metrics["ROE_rank"]
+    )
+    metrics = metrics.sort_values(by=["total_rank"], ascending=True)
+
+    return metrics
+
+
 def rank_stocks():
     return
